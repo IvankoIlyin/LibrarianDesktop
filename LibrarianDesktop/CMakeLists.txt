@@ -17,7 +17,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        database_manager.cpp
 )
 
 set(PROJECT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
@@ -25,12 +24,16 @@ set(PROJECT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(LibrarianDesktop
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        database_manager.h database_manager.cpp
-        user.h user.cpp
-        document.h document.cpp
-        transaction.h transaction.cpp
+              ${PROJECT_SOURCES}
+              db_manager/database_manager.h
+              db_manager/database_manager.cpp
 
+              entity/user.h
+              entity/user.cpp
+              entity/document.h
+              entity/document.cpp
+              entity/transaction.h
+              entity/transaction.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET LibrarianDesktop APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -51,6 +54,10 @@ else()
 endif()
 
 target_link_libraries(LibrarianDesktop PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql)
+target_include_directories(LibrarianDesktop PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/db_manager
+    ${CMAKE_CURRENT_SOURCE_DIR}/entity
+)
 file(GLOB DB_FILES "${CMAKE_SOURCE_DIR}/db/*.db")
 file(COPY ${DB_FILES} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/db)
 file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/db)
