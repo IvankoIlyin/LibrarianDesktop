@@ -21,6 +21,8 @@ public:
     void set_author(const QString& _author);
     void set_type(const QString& _type);
 
+    QString get_full_data();
+
 };
 
 #endif // DOCUMENT_H

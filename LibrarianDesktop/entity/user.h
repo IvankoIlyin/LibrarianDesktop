@@ -19,6 +19,8 @@ public:
     void set_name(const QString& _name);
     void set_role(const QString& _role);
 
+    QString get_full_data();
+
 };
 
 #endif // USER_H

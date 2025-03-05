@@ -29,3 +29,7 @@ void User::set_name(const QString& _name){
 void User::set_role(const QString& _role){
     this->role = _role;
 }
+
+QString User::get_full_data(){
+    return QString::number(id)+ " - " + name + " - " + role;
+}

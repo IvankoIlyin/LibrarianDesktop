@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QVBoxLayout>
+#include"table_widget/tablewidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -17,7 +18,18 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void display_users();
+    void display_documents();
+    void display_transactions();
+
 private:
+    TableWidget* table;
+    QVBoxLayout* layout;
     Ui::MainWindow *ui;
 };
+
+
+
+
 #endif // MAINWINDOW_H

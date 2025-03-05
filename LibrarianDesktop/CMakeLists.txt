@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
               entity/document.cpp
               entity/transaction.h
               entity/transaction.cpp
+              table_widget/tablewidget.h table_widget/tablewidget.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET LibrarianDesktop APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

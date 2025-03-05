@@ -23,3 +23,4 @@ int Transaction::get_librarian_id() const { return librarian_id; }
 int Transaction::get_document_id() const { return document_id; }
 QString Transaction::get_date() const { return date; }
 QString Transaction::get_status() const { return status; }
+QString Transaction::get_full_data() const{return QString::number(id)+ " - " + reader_name + " - " + librarian_name+ " - " + document_title+ " - " + date+ " - " + status;}

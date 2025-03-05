@@ -16,12 +16,18 @@ public:
     int get_document_id() const;
     QString get_date() const;
     QString get_status() const;
+    QString get_full_data() const;
+
+
 
 private:
     int id;
     int reader_id;
     int librarian_id;
     int document_id;
+    QString reader_name;
+    QString librarian_name;
+    QString document_title;
     QString date;
     QString status;
 };

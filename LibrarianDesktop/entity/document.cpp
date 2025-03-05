@@ -38,3 +38,7 @@ void Document::set_author(const QString& _author){
 void Document::set_type(const QString& _type){
     this->type = _type;
 }
+
+QString Document::get_full_data(){
+    return QString::number(id) +" - " + title + " - " + author+ " - " + type;
+}
