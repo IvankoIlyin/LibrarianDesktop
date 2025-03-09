@@ -9,12 +9,12 @@ class TableWidget: public QWidget
 {
 private:
 
-    DataBase_Manager db_manager;
+    DataBase_Manager* db_manager;
 
 public:
     QTableWidget* table_widget;
     TableWidget();
-    TableWidget(QWidget* parent = nullptr);
+    TableWidget(QWidget* parent = nullptr, DataBase_Manager* db_manager = nullptr);
     void display_users();
     void display_documents();
     void display_transaction();

@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include"table_widget/tablewidget.h"
+#include"user_widget/userwidget.h"
+#include"document_widget/documentwidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -19,13 +21,13 @@ public:
     ~MainWindow();
 
 private slots:
-    void display_users();
-    void display_documents();
-    void display_transactions();
+    void display_entity();
+    void create_entity();
 
 private:
     TableWidget* table;
     QVBoxLayout* layout;
+    std::unique_ptr<DataBase_Manager> db_manager;
     Ui::MainWindow *ui;
 };
 

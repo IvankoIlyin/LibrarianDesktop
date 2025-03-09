@@ -4,10 +4,13 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , db_manager(std::make_unique<DataBase_Manager>())
 {
     ui->setupUi(this);
-    table = new TableWidget(this);
-    table->display_documents();
+    table = new TableWidget(this, db_manager.get());
+
+    ui->radioButton_transactions->setChecked(1);
+    display_entity();
     ui->frame->setFrameShape(QFrame::Box);
     ui->frame->setFrameShadow(QFrame::Raised);
     ui->frame->setLineWidth(2);
@@ -18,29 +21,62 @@ MainWindow::MainWindow(QWidget *parent)
     layout->setSpacing(0);
 
     layout->addWidget(table->table_widget);
-    connect(ui->radioButton_users, &QRadioButton::clicked,this, &MainWindow::display_users);
-    connect(ui->radioButton_documets,&QRadioButton::clicked, this, &MainWindow::display_documents);
-    connect(ui->radioButton_transactions,&QRadioButton::clicked, this, &MainWindow::display_transactions);
+    connect(ui->radioButton_users, &QRadioButton::clicked,this, &MainWindow::display_entity);
+    connect(ui->radioButton_documets,&QRadioButton::clicked, this, &MainWindow::display_entity);
+    connect(ui->radioButton_transactions,&QRadioButton::clicked, this, &MainWindow::display_entity);
+    connect(ui->pushButton_create, &QPushButton::clicked, this, &MainWindow::create_entity);
+
+
+    //UserWidget* user_widget = new UserWidget(nullptr, 111);
+    //DocumentWidget* document_widget = new DocumentWidget(nullptr, 241);
+    //setCentralWidget(user_widget->user_form);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete table;
+    layout = nullptr;
 }
 
-void MainWindow::display_users() {
-    table->display_users();
+void MainWindow::display_entity(){
+    if(ui->radioButton_users->isChecked()){
+        table->display_users();
+    }
+    if(ui->radioButton_documets->isChecked()){
+        table->display_documents();
+    }
+    if(ui->radioButton_transactions->isChecked()){
+        table->display_transaction();
+    }
 }
 
-void MainWindow::display_documents() {
-    table->display_documents();
+
+void MainWindow::create_entity() {
+    if(ui->radioButton_users->isChecked()) {
+        UserWidget* user_widget = new UserWidget(this, -1, db_manager.get());
+        user_widget->user_form->setAttribute(Qt::WA_DeleteOnClose);
+        connect(user_widget->user_form, &QDialog::finished,
+                [this](int result) {
+                    if(result == QDialog::Accepted) {
+                        display_entity();
+                    }
+                });
+        user_widget->user_form->open();
+    }
+    if(ui->radioButton_documets->isChecked()) {
+        DocumentWidget* document_widget = new DocumentWidget(this, -1, db_manager.get());
+        document_widget->document_form->setAttribute(Qt::WA_DeleteOnClose);
+        connect(document_widget->document_form, &QDialog::finished,
+                [this](int result) {
+                    if(result == QDialog::Accepted) {
+                        display_entity();
+                    }
+                });
+        document_widget->document_form->open();
+    }
+
+
+    display_entity();
 }
-
-void MainWindow::display_transactions() {
-    table->display_transaction();
-}
-
-
-
-
 
