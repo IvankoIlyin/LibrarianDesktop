@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include<QMessageBox>
+#include <QComboBox>
 #include"database_manager.h"
 
 class UserWidget : public QWidget
@@ -17,8 +18,8 @@ class UserWidget : public QWidget
 
 private:
     QLineEdit* name_edit;
-    QLineEdit* role_edit;
     bool isEditMode;
+    QComboBox* role_combo;
     std::shared_ptr<DataBase_Manager> db_manager;
 public:
     QDialog* user_form;
