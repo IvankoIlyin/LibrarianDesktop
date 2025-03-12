@@ -26,10 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->radioButton_transactions,&QRadioButton::clicked, this, &MainWindow::display_entity);
     connect(ui->pushButton_create, &QPushButton::clicked, this, &MainWindow::create_entity);
 
-
-    //UserWidget* user_widget = new UserWidget(nullptr, 111);
-    //DocumentWidget* document_widget = new DocumentWidget(nullptr, 241);
-    //setCentralWidget(user_widget->user_form);
 }
 
 MainWindow::~MainWindow()
@@ -75,8 +71,16 @@ void MainWindow::create_entity() {
                 });
         document_widget->document_form->open();
     }
-
-
-    display_entity();
+    if(ui->radioButton_transactions->isChecked()) {
+        TransactionWidget* transaction_widget = new TransactionWidget(this, -1, db_manager.get());
+        transaction_widget->transaction_form->setAttribute(Qt::WA_DeleteOnClose);
+        connect(transaction_widget->transaction_form, &QDialog::finished,
+                [this](int result) {
+                    if(result == QDialog::Accepted) {
+                        display_entity();
+                    }
+                });
+        transaction_widget->transaction_form->open();
+    }
 }
 

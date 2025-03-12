@@ -43,7 +43,7 @@ public:
     //UPDATE
     bool update_user_by_id(int id, const QString& _name, const QString& _role);
     bool update_document_by_id(int id, const QString& _title, const QString& _author,const QString& _type);
-    bool update_transaction(int id, int reader_id, int librarian_id, int document_id, const QString& status);
+    bool update_transaction_by_id(int id, int reader_id, int librarian_id, int document_id,const QString& date, const QString& status);
 
     //DELETE
     bool delete_user_by_id(int id);

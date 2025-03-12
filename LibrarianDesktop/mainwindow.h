@@ -6,6 +6,7 @@
 #include"table_widget/tablewidget.h"
 #include"user_widget/userwidget.h"
 #include"document_widget/documentwidget.h"
+#include"transaction_widget/transactionwidget.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;

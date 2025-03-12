@@ -35,6 +35,7 @@ UserWidget::UserWidget(QWidget *parent, int id, DataBase_Manager* db_manager)
     QHBoxLayout* nameLayout = new QHBoxLayout();
     QLabel* name_lbl = new QLabel("Name:", fieldsFrame);
     name_edit = new QLineEdit(fieldsFrame);
+    name_edit->setText(name);
     nameLayout->addWidget(name_lbl);
     nameLayout->addStretch();
     nameLayout->addWidget(name_edit);
@@ -44,7 +45,8 @@ UserWidget::UserWidget(QWidget *parent, int id, DataBase_Manager* db_manager)
     role_combo = new QComboBox(fieldsFrame);
     role_combo->addItem("Librarian");
     role_combo->addItem("Reader");
-    role_combo->setCurrentIndex(0);
+    if(role=="Librarian" || role == ""){role_combo->setCurrentIndex(0);}
+    if(role=="Reader"){role_combo->setCurrentIndex(1);}
 
     roleLayout->addWidget(role_lbl);
     roleLayout->addStretch();

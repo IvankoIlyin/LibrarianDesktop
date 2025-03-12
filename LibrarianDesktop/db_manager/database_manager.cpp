@@ -300,7 +300,7 @@ bool DataBase_Manager::update_document_by_id(int id, const QString& title, const
     return query.numRowsAffected() > 0;
 }
 
-bool DataBase_Manager::update_transaction(int id, int reader_id, int librarian_id, int document_id, const QString& status) {
+bool DataBase_Manager::update_transaction_by_id(int id, int reader_id, int librarian_id, int document_id,const QString& date, const QString& status) {
     if (!db.isOpen()) {
         qDebug() << "Database is not open";
         return false;
@@ -309,13 +309,14 @@ bool DataBase_Manager::update_transaction(int id, int reader_id, int librarian_i
     QSqlQuery query(db);
 
     query.prepare("UPDATE transactions SET reader_id = :reader_id, "
-                  "librarian_id = :librarian_id, document_id = :document_id, "
+                  "librarian_id = :librarian_id, document_id = :document_id, date = :date, "
                   "status = :status WHERE id = :id");
 
     query.bindValue(":reader_id", reader_id);
     query.bindValue(":librarian_id", librarian_id);
     query.bindValue(":document_id", document_id);
     query.bindValue(":status", status);
+    query.bindValue(":date", date);
     query.bindValue(":id", id);
 
     if (!query.exec()) {
