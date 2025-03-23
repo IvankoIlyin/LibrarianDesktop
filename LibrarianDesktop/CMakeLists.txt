@@ -40,6 +40,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
               user_widget/userwidget.cpp
               document_widget/documentwidget.h document_widget/documentwidget.cpp
               transaction_widget/transactionwidget.h transaction_widget/transactionwidget.cpp
+              report_snapshots/reportsnapshots.h report_snapshots/reportsnapshots.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET LibrarianDesktop APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
