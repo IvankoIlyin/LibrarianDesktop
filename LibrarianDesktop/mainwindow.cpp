@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->radioButton_documets,&QRadioButton::clicked, this, &MainWindow::display_entity);
     connect(ui->radioButton_transactions,&QRadioButton::clicked, this, &MainWindow::display_entity);
     connect(ui->pushButton_create, &QPushButton::clicked, this, &MainWindow::create_entity);
+    connect(ui->pushButton_upd_storage, &QPushButton::clicked, this, &MainWindow::update_storage);
 
 }
 
@@ -83,4 +84,13 @@ void MainWindow::create_entity() {
         transaction_widget->transaction_form->open();
     }
 }
+
+void MainWindow::update_storage(){
+    ReportSnapshots* report = new ReportSnapshots(db_manager.get());
+    report->load_transactions_from_json();
+    report->saveTransactionsToJson();
+    qDebug()<<"storage updated";
+}
+
+
 

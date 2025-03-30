@@ -25,11 +25,13 @@ private:
     int reader_id;
     int librarian_id;
     int document_id;
+    QString date;
+    QString status;
+
+
     QString reader_name;
     QString librarian_name;
     QString document_title;
-    QString date;
-    QString status;
 };
 
 #endif // TRANSACTION_H

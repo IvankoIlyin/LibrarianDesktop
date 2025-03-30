@@ -2,21 +2,42 @@
 #define REPORTSNAPSHOTS_H
 #include<QVector>
 #include"database_manager.h"
-
+#include <QFile>
+#include<QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonArray>
 
 class ReportSnapshots
 {
 private:
     std::shared_ptr<DataBase_Manager> db_manager;
     QVector<Transaction*> all_transaction;
-public:
-    ReportSnapshots(std::shared_ptr<DataBase_Manager> db_manager = nullptr);
 
-    QVector<Transaction*> snapshot_by_date(const QString& start_date, const QString& end_date);
-    QVector<Transaction*> snapshot_by_reader(const QString& reader_name);
-    QVector<Transaction*> snapshot_by_librarian(const QString& librarian_name);
-    QVector<Transaction*> snapshot_by_document_type(const QString& document_type);
-    QVector<Transaction*> snapshot_by_document_author(const QString& document_author);
+    QJsonObject storageData;
+    QString storagePath;
+
+    void initializeStorage();
+
+public:
+    ReportSnapshots(DataBase_Manager* db_manager = nullptr);
+    QVector<Transaction*> storage_transaction;
+    bool saveTransactionsToJson();
+    bool load_transactions_from_json();
+    QVector<Transaction*> snapshot_by_date(const QVector<Transaction*>& transactions, const QString& start_date, const QString& end_date);
+    QVector<Transaction*> snapshot_by_reader(const QVector<Transaction*>& transactions, const QString& reader_name);
+    QVector<Transaction*> snapshot_by_librarian(const QVector<Transaction*>& transactions, const QString& librarian_name);
+    QVector<Transaction*> snapshot_by_document_type(const QVector<Transaction*>& transactions, const QString& document_type);
+    QVector<Transaction*> snapshot_by_document_author(const QVector<Transaction*>& transactions, const QString& document_author);
+
+
+    QVector<Transaction*> snapshot_by_date_author(const QString& start_date, const QString& end_date, const QString& document_author);
+    QVector<Transaction*> snapshot_by_date_type(const QString& start_date, const QString& end_date, const QString& document_type);
+    QVector<Transaction*> snapshot_by_date_reader(const QString& start_date, const QString& end_date, const QString& reader_name);
+    QVector<Transaction*> snapshot_by_date_librarian(const QString& start_date, const QString& end_date, const QString& librarian_name);
+    QVector<Transaction*> snapshot_by_reader_type(const QString& reader_name, const QString& document_type);
+    QVector<Transaction*> snapshot_by_reader_author(const QString& reader_name, const QString& document_author);
 
 };
 
