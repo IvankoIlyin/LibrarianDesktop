@@ -3,16 +3,19 @@
 #include<QVector>
 #include"database_manager.h"
 #include <QFile>
-#include<QDir>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonArray>
+#include <QMap>
+
+
 
 class ReportSnapshots
 {
 private:
-    std::shared_ptr<DataBase_Manager> db_manager;
+     DataBase_Manager* db_manager;
     QVector<Transaction*> all_transaction;
 
     QJsonObject storageData;
@@ -38,6 +41,15 @@ public:
     QVector<Transaction*> snapshot_by_date_librarian(const QString& start_date, const QString& end_date, const QString& librarian_name);
     QVector<Transaction*> snapshot_by_reader_type(const QString& reader_name, const QString& document_type);
     QVector<Transaction*> snapshot_by_reader_author(const QString& reader_name, const QString& document_author);
+
+    QVector<Transaction*> sort_by_popular_of_document(QVector<Transaction*> transactions);
+    QVector<Transaction*> sort_by_reader_activity(QVector<Transaction*> transactions);
+    QVector<Transaction*> sort_by_librarian_activity(QVector<Transaction*> transactions);
+
+
+
+
+
 
 };
 

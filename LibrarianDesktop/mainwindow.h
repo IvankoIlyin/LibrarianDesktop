@@ -8,6 +8,7 @@
 #include"document_widget/documentwidget.h"
 #include"transaction_widget/transactionwidget.h"
 #include"report_snapshots/reportsnapshots.h"
+#include"about_author/aboutauthor.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ private slots:
     void display_entity();
     void create_entity();
     void update_storage();
+    void about_author();
 
 private:
     TableWidget* table;

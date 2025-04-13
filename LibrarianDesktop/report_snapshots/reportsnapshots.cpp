@@ -1,9 +1,12 @@
 #include "reportsnapshots.h"
 
-ReportSnapshots::ReportSnapshots(DataBase_Manager* db_manager): db_manager(std::move(db_manager)) {
+ReportSnapshots::ReportSnapshots(DataBase_Manager* db_manager): db_manager(db_manager) {
     initializeStorage();
 }
 
+
+
+//STORAGE OPERATIONS
 void ReportSnapshots::initializeStorage() {
     QDir currentDir = QDir::current();
 
@@ -16,16 +19,30 @@ void ReportSnapshots::initializeStorage() {
     }
 
     storagePath = currentDir.absoluteFilePath("storage/storage.json");
-
     QFile jsonFile(storagePath);
-    QJsonParseError parseError;
 
+    if (!jsonFile.exists()) {
+        // Створюємо порожній JSON об'єкт
+        QJsonObject initialObj;
+        initialObj["transactions"] = QJsonArray();
+        QJsonDocument doc(initialObj);
+
+        if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            jsonFile.write(doc.toJson());
+            jsonFile.close();
+            qDebug() << "Created new empty storage.json";
+        } else {
+            qDebug() << "Failed to create storage.json";
+            return;
+        }
+    }
+
+    QJsonParseError parseError;
     if (jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QByteArray rawData = jsonFile.readAll();
         jsonFile.close();
 
         QJsonDocument jsonDoc = QJsonDocument::fromJson(rawData, &parseError);
-
         if (parseError.error != QJsonParseError::NoError) {
             qDebug() << "JSON parse error:" << parseError.errorString();
             storageData = QJsonObject();
@@ -75,6 +92,7 @@ bool ReportSnapshots::saveTransactionsToJson() {
     QJsonArray existingArray = existingObj.value("transactions").toArray();
 
     for (int i = 0; i < all_transaction.size(); i++) {
+
         if (existingIds.contains(all_transaction[i]->get_id())) {
             continue;
         }
@@ -154,13 +172,15 @@ bool ReportSnapshots::load_transactions_from_json() {
 }
 
 
+// SNAPSHOTS
 QVector<Transaction*> ReportSnapshots::snapshot_by_date(const QVector<Transaction*>& transactions, const QString& start_date, const QString& end_date) {
     QDate start_d = QDate::fromString(start_date, "yyyy-MM-dd");
     QDate end_d = QDate::fromString(end_date, "yyyy-MM-dd");
     QVector<Transaction*> snapshot;
 
     for (Transaction* transaction : transactions) {
-        QDate curr_date = QDate::fromString(transaction->get_date(), "yyyy-MM-dd");
+        QString date_string = transaction->get_date().left(10);
+        QDate curr_date = QDate::fromString(date_string, "yyyy-MM-dd");
         if (curr_date >= start_d && curr_date <= end_d) {
             snapshot.append(transaction);
         }
@@ -285,6 +305,66 @@ QVector<Transaction*> ReportSnapshots::snapshot_by_reader_author(const QString& 
 }
 
 
+//SORTING TRANSACTIONS
+QVector<Transaction*> ReportSnapshots::sort_by_popular_of_document(QVector<Transaction*> transactions) {
+    QMap<int, int> doc_count;
+    for (Transaction* t : transactions) {
+        int doc_id = t->get_document_id();
+        doc_count[doc_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = doc_count[a->get_document_id()];
+        int countB = doc_count[b->get_document_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_document_id() < b->get_document_id();
+    });
+
+    return transactions;
+}
 
 
+QVector<Transaction*> ReportSnapshots::sort_by_reader_activity(QVector<Transaction*> transactions) {
+    QMap<int, int> reader_count;
+    for (Transaction* t : transactions) {
+        int reader_id = t->get_reader_id();
+        reader_count[reader_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = reader_count[a->get_reader_id()];
+        int countB = reader_count[b->get_reader_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_reader_id() < b->get_reader_id();
+    });
+
+    return transactions;
+}
+
+
+QVector<Transaction*> ReportSnapshots::sort_by_librarian_activity(QVector<Transaction*> transactions) {
+    QMap<int, int> librarian_count;
+    for (Transaction* t : transactions) {
+        int lib_id = t->get_librarian_id();
+        librarian_count[lib_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = librarian_count[a->get_librarian_id()];
+        int countB = librarian_count[b->get_librarian_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_librarian_id() < b->get_librarian_id();
+    });
+
+    return transactions;
+}
 

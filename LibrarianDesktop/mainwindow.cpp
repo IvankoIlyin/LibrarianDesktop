@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->radioButton_transactions,&QRadioButton::clicked, this, &MainWindow::display_entity);
     connect(ui->pushButton_create, &QPushButton::clicked, this, &MainWindow::create_entity);
     connect(ui->pushButton_upd_storage, &QPushButton::clicked, this, &MainWindow::update_storage);
+    connect(ui->about_author_Button, &QPushButton::clicked, this, &MainWindow::about_author);
 
 }
 
@@ -92,5 +93,11 @@ void MainWindow::update_storage(){
     qDebug()<<"storage updated";
 }
 
+
+void MainWindow::about_author(){
+    AboutAuthor* about_author = new AboutAuthor();
+    about_author->about_author_form->setAttribute(Qt::WA_DeleteOnClose);
+    about_author->about_author_form->open();
+}
 
 
