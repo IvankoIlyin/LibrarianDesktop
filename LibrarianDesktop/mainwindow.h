@@ -28,12 +28,14 @@ private slots:
     void create_entity();
     void update_storage();
     void about_author();
+    void set_sort_code();
 
 private:
     TableWidget* table;
     QVBoxLayout* layout;
     std::unique_ptr<DataBase_Manager> db_manager;
     Ui::MainWindow *ui;
+    int sort_code=0;
 };
 
 

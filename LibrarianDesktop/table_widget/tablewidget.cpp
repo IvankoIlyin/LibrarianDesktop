@@ -67,13 +67,23 @@ void TableWidget::display_documents() {
     displayed_entity = "documents";
 }
 
-void TableWidget::display_transaction() {
+void TableWidget::display_transaction(int sort_code) {
     if (!db_manager) {
         qWarning() << "Database manager is null";
         return;
     }
 
     QVector<Transaction*> transactions = db_manager->read_transaction_list();
+    if(sort_code==1){
+        transactions = sort_by_popular_of_document(transactions);
+    }
+    if(sort_code==2){
+        transactions = sort_by_reader_activity(transactions);
+    }
+    if(sort_code==3){
+        transactions = sort_by_librarian_activity(transactions);
+    }
+
     table_widget->setRowCount(transactions.size());
     table_widget->setColumnCount(6);
     QStringList headers;
@@ -141,7 +151,7 @@ void TableWidget::onTableRowRightClicked(const QPoint &pos)
             connect(transaction_widget->transaction_form, &QDialog::finished,
                     [this](int result) {
                         if(result == QDialog::Accepted) {
-                            display_transaction();
+                            display_transaction(0);
                         }
                     });
             transaction_widget->transaction_form->open();
@@ -150,9 +160,74 @@ void TableWidget::onTableRowRightClicked(const QPoint &pos)
     } else if (selectedAction == actionDelete) {
         if(displayed_entity=="users"){db_manager->delete_user_by_id(id); display_users();}
         else if(displayed_entity=="documents"){db_manager->delete_document_by_id(id); display_documents();}
-         else if(displayed_entity=="transactions"){db_manager->delete_transaction(id); display_transaction();}
+         else if(displayed_entity=="transactions"){db_manager->delete_transaction(id); display_transaction(0);}
     }
 }
+
+
+//SORTING TRANSACTIONS
+QVector<Transaction*> TableWidget::sort_by_popular_of_document(QVector<Transaction*> transactions) {
+    QMap<int, int> doc_count;
+    for (Transaction* t : transactions) {
+        int doc_id = t->get_document_id();
+        doc_count[doc_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = doc_count[a->get_document_id()];
+        int countB = doc_count[b->get_document_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_document_id() < b->get_document_id();
+    });
+
+    return transactions;
+}
+
+
+QVector<Transaction*> TableWidget::sort_by_reader_activity(QVector<Transaction*> transactions) {
+    QMap<int, int> reader_count;
+    for (Transaction* t : transactions) {
+        int reader_id = t->get_reader_id();
+        reader_count[reader_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = reader_count[a->get_reader_id()];
+        int countB = reader_count[b->get_reader_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_reader_id() < b->get_reader_id();
+    });
+
+    return transactions;
+}
+
+
+QVector<Transaction*> TableWidget::sort_by_librarian_activity(QVector<Transaction*> transactions) {
+    QMap<int, int> librarian_count;
+    for (Transaction* t : transactions) {
+        int lib_id = t->get_librarian_id();
+        librarian_count[lib_id]++;
+    }
+
+    std::sort(transactions.begin(), transactions.end(), [&](Transaction* a, Transaction* b) {
+        int countA = librarian_count[a->get_librarian_id()];
+        int countB = librarian_count[b->get_librarian_id()];
+
+        if (countA != countB)
+            return countA > countB;
+
+        return a->get_librarian_id() < b->get_librarian_id();
+    });
+
+    return transactions;
+}
+
 
 
 
